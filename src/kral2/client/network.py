@@ -44,6 +44,16 @@ class LocalClient:
                     msg = msg[len(OBJ_FOR_CLIENT):]
                     oid = msg[0] + msg[1] * 2**8 + msg[2] * 2**16
                     self.client_object_id = oid
+                elif msg.startswith(EDIT_OBJECT):
+                    obj = json.loads(msg[1:].decode())
+                    self.objects[obj['id']] = obj
+                elif msg.startswith(DELETE_OBJECT):
+                    msg = msg[1:]
+                    oid = msg[0] + msg[1] * 2**8 + msg[2] * 2**16
+                    try:
+                        del self.objects[oid]
+                    except KeyError:
+                        print('Warning: DELETE_OBJECT: object not found.')
         except BlockingIOError:
             pass
         if self.oldpressed != self.pressed or time.time() - self.lastping > PING_TIMEOUT / 2:

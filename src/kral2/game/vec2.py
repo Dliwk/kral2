@@ -12,6 +12,9 @@ class Vec2:
         self.x = x
         self.y = y
 
+    def copy(self):
+        return Vec2(self.x, self.y)
+
     def __add__(self, other: Vec2):
         return Vec2(self.x + other.x, self.y + other.y)
 

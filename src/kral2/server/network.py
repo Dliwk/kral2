@@ -39,6 +39,8 @@ class LocalServer:
         self.gen_object_for_client = gen_object_for_client_func
         self.trytobuild = try_to_build_func
         self.trytodestroy = try_to_destroy_func
+        self.lastsync = 0
+        self.lastobjs = {}
 
     def cleanup(self):
         for cid in list(self._clients):
@@ -95,8 +97,28 @@ class LocalServer:
         except BlockingIOError:
             pass
 
-        for client in self._clients.values():
-            client.send(SERVER_OBJECTS + self.dumpall())
+        now = time.time()
+        if now - self.lastsync > 2:
+            for client in self._clients.values():
+                client.send(SERVER_OBJECTS + self.dumpall())
+            self.lastsync = now
+        else:
+            for oid in self.lastobjs:
+                self.lastobjs[oid].processed = False
+            for obj in self.objects:
+                lo = self.lastobjs.get(obj.id)
+                if not lo or lo.pos != obj.pos:  # FIXME: other attributes
+                    for client in self._clients.values():
+                        client.send(EDIT_OBJECT + json.dumps(obj.to_dict()).encode())
+                        client.send(EDIT_OBJECT + json.dumps(obj.to_dict()).encode())
+                self.lastobjs[obj.id] = obj.copy()
+                self.lastobjs[obj.id].processed = True
+
+            for oid in list(self.lastobjs):
+                if not self.lastobjs[oid].processed:
+                    for client in self._clients.values():
+                        client.send(DELETE_OBJECT + oid.to_bytes(3, 'little'))
+                    del self.lastobjs[oid]
         self.cleanup()
         self.update_for_input()
 

@@ -23,6 +23,12 @@ class GameObject:
     def postinit(self):
         pass
 
+    def copy(self):
+        go = GameObject(pos=self.pos.copy(), width=self.width, height=self.height, color=self.color,
+                        activity=self.activity, collide=self.collide)
+        go.died = self.died
+        return go
+
     def die(self):
         self.died = True
 

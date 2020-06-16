@@ -27,6 +27,7 @@ class LocalClient:
         self.oldpressed = self.pressed.copy()
         self.lastping = time.time()
         self.objects = {}
+        self.modified_objects = {}
         self.client_object_id = None
 
     def update(self):
@@ -40,6 +41,7 @@ class LocalClient:
                     self.objects = {}
                     for obj in json.loads(msg[1:].decode()):
                         self.objects[obj['id']] = obj
+                    self.modified_objects = self.objects.copy()
                 elif msg.startswith(OBJ_FOR_CLIENT):
                     msg = msg[len(OBJ_FOR_CLIENT):]
                     oid = msg[0] + msg[1] * 2**8 + msg[2] * 2**16
@@ -47,6 +49,7 @@ class LocalClient:
                 elif msg.startswith(EDIT_OBJECT):
                     obj = json.loads(msg[1:].decode())
                     self.objects[obj['id']] = obj
+                    self.modified_objects[obj['id']] = obj.copy()
                 elif msg.startswith(DELETE_OBJECT):
                     msg = msg[1:]
                     oid = msg[0] + msg[1] * 2**8 + msg[2] * 2**16

@@ -46,16 +46,19 @@ class GraphicsThread(multiprocessing.Process):
             self._client.pressed['k'] = pg.key.get_pressed()[pg.K_k]
             self._client.update()
 
-            for oid in self._game_sprites:
-                self._game_sprites[oid].tracking = False
-
-            for oid, obj in self._client.objects.items():
+            for oid, obj in self._client.modified_objects.copy().items():
                 if oid not in self._game_sprites:
                     self._game_sprites[oid] = spritefrom(obj)
                     self._game_sprites[oid].add(self._game_sprites_group)
                 else:
                     sprite = spritefrom(obj)
                     self._game_sprites[oid].sync_with(sprite)
+                del self._client.modified_objects[oid]
+
+            for oid in self._game_sprites:
+                self._game_sprites[oid].tracking = False
+
+            for oid, obj in self._client.objects.items():
                 self._game_sprites[oid].tracking = True
 
             for oid in self._game_sprites:

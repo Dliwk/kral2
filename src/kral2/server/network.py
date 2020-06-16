@@ -75,6 +75,7 @@ class LocalServer:
                     client.send(OBJ_FOR_CLIENT + obj.id.to_bytes(3, 'little'))
                     client.send(OBJ_FOR_CLIENT + obj.id.to_bytes(3, 'little'))
                     client.send(OBJ_FOR_CLIENT + obj.id.to_bytes(3, 'little'))
+                    client.send(SERVER_OBJECTS + self.dumpall())
                     print('NEW', self._last_client_id)
                 else:
                     client = self._clients.get(msg[0])
@@ -98,7 +99,7 @@ class LocalServer:
             pass
 
         now = time.time()
-        if now - self.lastsync > 2:
+        if now - self.lastsync > 60:
             for client in self._clients.values():
                 client.send(SERVER_OBJECTS + self.dumpall())
             self.lastsync = now

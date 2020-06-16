@@ -12,7 +12,7 @@ if TYPE_CHECKING:
 class Camera:
     def __init__(self, position: Vec2, winsize):
         self.pos = position
-        self._maxradius = 1000
+        # self._maxradius = 100000
         self._winsize = winsize
 
     @property
@@ -25,8 +25,8 @@ class Camera:
 
     def update(self, sprites):
         for sprite in sprites:
-            if (sprite.pos - self.pos).len() > self._maxradius:
-                continue
+            # if (sprite.pos - self.pos).len() > self._maxradius:
+            #     continue
             pos = sprite.pos - self.pos
             sprite.rect.x = pos.x
             sprite.rect.y = pos.y

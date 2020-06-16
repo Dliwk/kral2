@@ -41,7 +41,8 @@ class LocalServer:
         self.trytobuild = try_to_build_func
         self.trytodestroy = try_to_destroy_func
         self.lastsync = 0
-        self.lastobjs = {}
+        self._shatters = {}
+        self._count = 0
 
     def cleanup(self):
         for cid in list(self._clients):
@@ -81,7 +82,7 @@ class LocalServer:
                     client.send(OBJ_FOR_CLIENT + obj.id.to_bytes(3, 'little'))
                     client.send(OBJ_FOR_CLIENT + obj.id.to_bytes(3, 'little'))
                     client.send(OBJ_FOR_CLIENT + obj.id.to_bytes(3, 'little'))
-                    client.send(SERVER_OBJECTS + self.dumpall())
+                    self.send_big(client, self.dumpall(), SERVER_OBJECTS)
                     print('NEW', client.client_id, client.name)
                 else:
                     client = self._clients.get(msg[0])
@@ -100,6 +101,13 @@ class LocalServer:
                             'k': bool(msg[7]),
                         }
                         # print('PRESS', client.client_id, client.pressed)
+                    elif msg[1:2] == RETRY_SHATTER:
+                        if len(msg) != 5:
+                            continue
+                        no = msg[2] + msg[3] * 2**8 + msg[4] * 2**16
+                        if no in self._shatters:
+                            self._clients[msg[0]].send(OBJECTS_SHATTER + no.to_bytes(3, 'little') +
+                                                       self._shatters[no])
 
         except BlockingIOError:
             pass
@@ -107,7 +115,7 @@ class LocalServer:
         now = time.time()
         if now - self.lastsync > 60:
             for client in self._clients.values():
-                client.send(SERVER_OBJECTS + self.dumpall())
+                self.send_big(client, self.dumpall(), prefix=SERVER_OBJECTS)
             self.lastsync = now
         else:
             for obj in self.objects:
@@ -122,6 +130,25 @@ class LocalServer:
 
         self.cleanup()
         self.update_for_input()
+
+    def send_big(self, client: RemoteClient, data, prefix):
+        SHATTER_LEN = 1024
+
+        def send_shatter(_shatter):
+            nonlocal self, client
+            client.send(prefix + OBJECTS_SHATTER + self._count.to_bytes(3, 'little') + _shatter)
+            self._shatters[self._count] = _shatter
+            self._count += 1
+            while len(self._shatters) > 100:
+                del self._shatters[min(self._shatters)]
+
+        count = 0
+        shatter = data[count * SHATTER_LEN:(count + 1) * SHATTER_LEN]
+        while shatter:
+            send_shatter(shatter)
+            count += 1
+            shatter = data[count * SHATTER_LEN:(count + 1) * SHATTER_LEN]
+        send_shatter(b'END')
 
     def update_for_input(self):
         for client in self._clients.values():

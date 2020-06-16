@@ -15,11 +15,12 @@ if TYPE_CHECKING:
 
 
 class RemoteClient:
-    def __init__(self, sock: socket.socket, ip, port, client_id):
+    def __init__(self, sock: socket.socket, ip, port, client_id, name):
         self._s = sock
         self.client_id = client_id
         self.ip = ip
         self.port = port
+        self.name = name
         self.lastping = time.time()
         self.pressed = {'w': False, 'a': False, 's': False, 'd': False, 'j': False, 'k': False}
         self.object: Optional[GameObject] = None
@@ -65,18 +66,23 @@ class LocalServer:
                 if not msg.startswith(SIGNATURE):
                     continue
                 msg = msg[len(SIGNATURE):]
-                if msg == NEW_CLIENT:
+                if msg.startswith(NEW_CLIENT):
                     self._last_client_id = (self._last_client_id + 1) % 255
-                    client = RemoteClient(self._s, ip, port, self._last_client_id)
+                    try:
+                        name = msg[len(NEW_CLIENT):].decode()
+                    except UnicodeDecodeError:
+                        print('Invalid name')
+                        name = '<invalid name>'
+                    client = RemoteClient(self._s, ip, port, self._last_client_id, name)
                     client.send(self._last_client_id.to_bytes(1, 'little'))
                     self._clients[self._last_client_id] = client
-                    obj = self.gen_object_for_client(client.client_id)
+                    obj = self.gen_object_for_client(client.client_id, client.name)
                     client.object = obj
                     client.send(OBJ_FOR_CLIENT + obj.id.to_bytes(3, 'little'))
                     client.send(OBJ_FOR_CLIENT + obj.id.to_bytes(3, 'little'))
                     client.send(OBJ_FOR_CLIENT + obj.id.to_bytes(3, 'little'))
                     client.send(SERVER_OBJECTS + self.dumpall())
-                    print('NEW', self._last_client_id)
+                    print('NEW', client.client_id, client.name)
                 else:
                     client = self._clients.get(msg[0])
                     if not client:

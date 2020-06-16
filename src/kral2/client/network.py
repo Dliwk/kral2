@@ -13,10 +13,11 @@ if TYPE_CHECKING:
 
 
 class LocalClient:
-    def __init__(self, ip, port):
+    def __init__(self, ip, port, name="Unknown Player"):
         self._s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self._s.connect((ip, port))
-        self._s.send(SIGNATURE + NEW_CLIENT)
+        self.name = name.encode()
+        self._s.send(SIGNATURE + NEW_CLIENT + self.name)
         res = self._s.recv(1024)
         self._s.setblocking(False)
         if len(res) != len(SIGNATURE) + 1 or not res.startswith(SIGNATURE):

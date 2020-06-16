@@ -4,6 +4,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from kral2.game.gameobject import GameObject
+from kral2.game.textobj import TextObject
 from kral2.game.vec2 import Vec2
 
 if TYPE_CHECKING:
@@ -11,13 +12,15 @@ if TYPE_CHECKING:
 
 
 class PlayerObject(GameObject):
-    def __init__(self, pos: Vec2, width, height, color):
+    def __init__(self, pos: Vec2, width, height, color, name):
         super().__init__(pos, width, height, color)
+        self.name = TextObject(pos, width, height, color, name)
         self.targetobj = TargetObject(player=self)
 
     def postinit(self):
         super().postinit()
         self.activity.add_object(self.targetobj)
+        self.activity.add_object(self.name)
 
     def move(self, pos: Vec2):
         toffset = Vec2(0, 0)
@@ -32,6 +35,7 @@ class PlayerObject(GameObject):
             toffset += Vec2(0, -self.height)
         if toffset != Vec2(0, 0):
             self.targetobj.offset = toffset
+        self.name.pos = self.pos + Vec2(0, -self.height)
 
 
 class TargetObject(GameObject):

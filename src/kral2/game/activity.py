@@ -46,8 +46,8 @@ class Activity:
         self.next_oid += 1
         obj.postinit()
 
-    def spawn_player(self, client_id):
-        obj = PlayerObject(Vec2(0, 0), 10, 10, (255, 255, 0))
+    def spawn_player(self, client_id, name):
+        obj = PlayerObject(Vec2(0, 0), 10, 10, (255, 255, 0), name)
         self.add_object(obj)
         return obj
 

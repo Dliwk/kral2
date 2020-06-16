@@ -14,5 +14,5 @@ if TYPE_CHECKING:
 class DefaultGame(Activity):
     def __init__(self):
         super().__init__()
-        for i in range(-100, 100, 50):
-            self.add_object(GameObject(Vec2(i, 50), 10, 10, (255, 255, 255)))
+        # for i in range(-100, 100, 50):
+        #     self.add_object(GameObject(Vec2(i, 50), 10, 10, (255, 255, 255)))

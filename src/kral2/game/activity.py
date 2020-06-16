@@ -65,8 +65,9 @@ class Activity:
     def update(self):  # One tick
         diedobjs = []
         for obj in self.objects:
-            if obj.died:
+            if obj.__died__:
                 diedobjs.append(obj)
-            obj.update()
+            else:
+                obj.update()
         for obj in diedobjs:
             self.objects.remove(obj)

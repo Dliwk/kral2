@@ -12,13 +12,25 @@ if TYPE_CHECKING:
 class GameObject:
     def __init__(self, pos: Vec2, width, height, color, activity=None, collide=True):
         self.id = None
-        self.pos = pos
+        self._pos = pos
         self.width = width
         self.height = height
         self.color = color
         self.died = False
         self.activity = activity
         self.collide = collide
+
+        self.__modified__ = True
+        self.__died__ = False
+
+    @property
+    def pos(self):
+        return self._pos
+
+    @pos.setter
+    def pos(self, value):
+        self._pos = value
+        self.__modified__ = True
 
     def postinit(self):
         pass
@@ -42,6 +54,7 @@ class GameObject:
             if self.activity:
                 if self.activity.is_collide_any(self):
                     self.pos -= _pos
+        self.__modified__ = True
 
     def to_dict(self):
         return {'id': self.id, 'type': 'GameObject',

@@ -48,7 +48,7 @@ class LocalServer:
             if time.time() - self._clients[cid].lastping > PING_TIMEOUT:
                 print('TIMEOUT', cid)
                 try:
-                    self.objects.remove(self._clients[cid].object)
+                    self._clients[cid].object.die()
                 except ValueError:
                     print("Warning: timeout: client has not object")
                 del self._clients[cid]

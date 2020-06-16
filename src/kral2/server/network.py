@@ -60,6 +60,13 @@ class LocalServer:
             result.append(obj.to_dict())
         return json.dumps(result).encode()
 
+    def mapdump(self) -> str:
+        result = []
+        for obj in self.objects:
+            if obj.block:
+                result.append(obj.to_dict())
+        return json.dumps(result)
+
     def update(self):
         try:
             while True:
@@ -113,17 +120,18 @@ class LocalServer:
             pass
 
         now = time.time()
-        if now - self.lastsync > 60:
-            for client in self._clients.values():
-                self.send_big(client, self.dumpall(), prefix=SERVER_OBJECTS)
-            self.lastsync = now
-        else:
+        # if now - self.lastsync > 60:
+        #     for client in self._clients.values():
+        #         self.send_big(client, self.dumpall(), prefix=SERVER_OBJECTS)
+        #     self.lastsync = now
+        # else:
+        if True:
             for obj in self.objects:
                 if obj.__modified__:  # FIXME: other attributes
                     for client in self._clients.values():
                         client.send(EDIT_OBJECT + json.dumps(obj.to_dict()).encode())
                     obj.__modified__ = False
-                elif obj.died:
+                if obj.died:
                     for client in self._clients.values():
                         client.send(DELETE_OBJECT + obj.id.to_bytes(3, 'little'))
                     obj.__died__ = True

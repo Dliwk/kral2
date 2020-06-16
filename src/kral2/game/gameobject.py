@@ -19,6 +19,7 @@ class GameObject:
         self.died = False
         self.activity = activity
         self.collide = collide
+        self.block = True
 
         self.__modified__ = True
         self.__died__ = False

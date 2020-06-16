@@ -9,7 +9,7 @@ from kral2.game import Vec2
 from dataclasses import dataclass
 
 if TYPE_CHECKING:
-    from typing import List, Union
+    from typing import List, Union, Dict
 
 
 @dataclass
@@ -70,4 +70,16 @@ class Activity:
             else:
                 obj.update()
         for obj in diedobjs:
+            if isinstance(obj, TargetObject):
+                print('TARGET REMOVED')
             self.objects.remove(obj)
+
+    def load_objects(self, dump: List[Dict]):
+        for obj in dump:
+            if obj['type'] == 'GameObject':  # hmm players?
+                gobj = GameObject(
+                    pos=Vec2(obj['pos']['x'], obj['pos']['y']),
+                    width=obj['width'],
+                    height=obj['height'],
+                    color=obj['color'])
+                self.add_object(gobj)

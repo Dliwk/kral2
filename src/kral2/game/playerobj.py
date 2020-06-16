@@ -16,6 +16,7 @@ class PlayerObject(GameObject):
         super().__init__(pos, width, height, color)
         self.name = TextObject(pos, width, height, color, name)
         self.targetobj = TargetObject(player=self)
+        self.block = False
 
     def postinit(self):
         super().postinit()
@@ -53,6 +54,11 @@ class TargetObject(GameObject):
         super().__init__(player.pos + self.offset, self.player.width, self.player.height,
                          color=self.BUILDABLE_COLOR,
                          collide=False)
+        self.block = False
+
+    def die(self):
+        super().die()
+        print('TARGET DIED')
 
     def update(self):
         super().update()

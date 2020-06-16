@@ -13,6 +13,7 @@ class TextObject(GameObject):
     def __init__(self, pos, width, height, color, text, activity=None):
         super().__init__(pos, width, height, color, activity=activity, collide=False)
         self.text = text
+        self.block = False
 
     def to_dict(self):
         res = super().to_dict()

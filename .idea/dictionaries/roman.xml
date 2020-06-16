@@ -1,0 +1,25 @@
+<component name="ProjectDictionaryState">
+  <dictionary name="roman">
+    <words>
+      <w>diedobjs</w>
+      <w>dumpall</w>
+      <w>kral</w>
+      <w>lastping</w>
+      <w>lastsync</w>
+      <w>localclient</w>
+      <w>maxradius</w>
+      <w>oldpressed</w>
+      <w>pdata</w>
+      <w>playerinfo</w>
+      <w>postinit</w>
+      <w>spritefrom</w>
+      <w>targetobj</w>
+      <w>toffset</w>
+      <w>trapeznikov</w>
+      <w>trytobuild</w>
+      <w>trytodestroy</w>
+      <w>wasd</w>
+      <w>winsize</w>
+    </words>
+  </dictionary>
+</component>

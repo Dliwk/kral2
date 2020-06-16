@@ -128,5 +128,5 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-# Compiled UI files (using pyuic5)
-ui_*.py
+# Local client configuration file
+client_config.yaml

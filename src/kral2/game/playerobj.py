@@ -37,6 +37,11 @@ class PlayerObject(GameObject):
             self.targetobj.offset = toffset
         self.name.pos = self.pos + Vec2(0, -self.height)
 
+    def die(self):
+        super().die()
+        self.name.die()
+        self.targetobj.die()
+
 
 class TargetObject(GameObject):
     BUILDABLE_COLOR = (0, 255, 0)

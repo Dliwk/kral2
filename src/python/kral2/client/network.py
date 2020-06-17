@@ -10,7 +10,7 @@ import time
 import threading
 
 if TYPE_CHECKING:
-    from typing import Optional
+    pass
 
 
 class LocalClient:

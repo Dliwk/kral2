@@ -8,7 +8,7 @@ from kral2.game.textobj import TextObject
 from kral2.game.vec2 import Vec2
 
 if TYPE_CHECKING:
-    from typing import Sequence, Optional
+    pass
 
 
 class PlayerObject(GameObject):

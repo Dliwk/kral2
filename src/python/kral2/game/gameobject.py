@@ -3,7 +3,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from kral2.game import Vec2
+from kral2.game.vec2 import Vec2
 
 if TYPE_CHECKING:
     pass

@@ -3,9 +3,10 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+import _kral2
 from kral2.game.gameobject import GameObject
 from kral2.game.playerobj import PlayerObject, TargetObject
-from kral2.game import Vec2
+from kral2.game.vec2 import Vec2
 from dataclasses import dataclass
 
 if TYPE_CHECKING:
@@ -27,11 +28,12 @@ class Activity:
 
     @staticmethod
     def is_collide(obj1, obj2):
-        rect1 = Rect(obj1.pos.x - obj1.width / 2, obj1.pos.y - obj1.height / 2, obj1.width, obj1.height)
-        rect2 = Rect(obj2.pos.x - obj2.width / 2, obj2.pos.y - obj2.height / 2, obj2.width, obj2.height)
-        return (rect1.x < rect2.x + rect1.width and
-                rect1.x + rect2.width > rect2.x and
-                rect1.y < rect2.y + rect1.height and rect1.height + rect1.y > rect2.y)
+        # rect1 = Rect(obj1.pos.x - obj1.width / 2, obj1.pos.y - obj1.height / 2, obj1.width, obj1.height)
+        # rect2 = Rect(obj2.pos.x - obj2.width / 2, obj2.pos.y - obj2.height / 2, obj2.width, obj2.height)
+        # return (rect1.x < rect2.x + rect1.width and
+        #         rect1.x + rect2.width > rect2.x and
+        #         rect1.y < rect2.y + rect1.height and rect1.height + rect1.y > rect2.y)
+        return _kral2.is_collide(obj1, obj2)
 
     def is_collide_any(self, obj):
         for go in self.objects:

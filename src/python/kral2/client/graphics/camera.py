@@ -6,7 +6,7 @@ from typing import TYPE_CHECKING
 from kral2.game.vec2 import Vec2
 
 if TYPE_CHECKING:
-    from typing import Sequence, Optional
+    pass
 
 
 class Camera:

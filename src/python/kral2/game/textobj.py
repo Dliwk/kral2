@@ -6,7 +6,7 @@ from typing import TYPE_CHECKING
 from kral2.game.gameobject import GameObject
 
 if TYPE_CHECKING:
-    from typing import Sequence, Optional
+    pass
 
 
 class TextObject(GameObject):

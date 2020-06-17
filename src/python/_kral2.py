@@ -4,4 +4,8 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from typing import Sequence, Optional
+    pass
+
+
+def is_collide(obj1, obj2) -> bool:
+    pass

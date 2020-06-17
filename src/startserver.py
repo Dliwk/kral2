@@ -11,7 +11,7 @@ if __name__ == '__main__':
     server = LocalServer('0.0.0.0', 43210, activity.spawn_player, activity.try_to_build, activity.try_to_destroy)
     server.objects = activity.objects
     # Use it for map loading
-    # f = open('map-1592340467.0276136.kral2.mapdump')
+    # f = open('map.kral2.mapdump')
     # mapdump = json.loads(f.read())
     # f.close()
     # activity.load_objects(mapdump)

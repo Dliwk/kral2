@@ -58,7 +58,6 @@ class TargetObject(GameObject):
 
     def die(self):
         super().die()
-        print('TARGET DIED')
 
     def update(self):
         super().update()

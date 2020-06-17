@@ -102,17 +102,20 @@ class LocalClient:
             def run(self):
                 time.sleep(1)
                 while not self._end_received and len(self._data) < self._count:
+                    mincount = min(self._data) if self._data else 0
                     if self._end_received:
                         count = self._count
                     else:
-                        count = max(self._data) if self._data else 999999999
-                    for i in range(count):
+                        count = max(self._data) + 100 if self._data else 999999999
+                    for i in range(mincount, count):
                         if i not in self._data:
                             self._s.send(
+                                SIGNATURE +
                                 self._client_id.to_bytes(1, 'little') +
                                 RETRY_SHATTER +
                                 i.to_bytes(3, 'little'))
-                    time.sleep(1)
+                            break
+                    time.sleep(0.1)
                 self._on_finish(b''.join(list(self._data.values())))
                 self.finished = True
         gbt = GetBigThread(prefix, on_finish, self._s, self.client_id)

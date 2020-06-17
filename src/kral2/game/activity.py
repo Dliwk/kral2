@@ -70,8 +70,6 @@ class Activity:
             else:
                 obj.update()
         for obj in diedobjs:
-            if isinstance(obj, TargetObject):
-                print('TARGET REMOVED')
             self.objects.remove(obj)
 
     def load_objects(self, dump: List[Dict]):

@@ -113,7 +113,8 @@ class LocalServer:
                             continue
                         no = msg[2] + msg[3] * 2**8 + msg[4] * 2**16
                         if no in self._shatters:
-                            self._clients[msg[0]].send(OBJECTS_SHATTER + no.to_bytes(3, 'little') +
+                            self._clients[msg[0]].send(SERVER_OBJECTS + OBJECTS_SHATTER +
+                                                       no.to_bytes(3, 'little') +
                                                        self._shatters[no])
 
         except BlockingIOError:
